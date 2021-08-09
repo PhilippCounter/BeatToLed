@@ -1,0 +1,15 @@
+{
+  "name": "BeatToLed",
+  "version": "1.0.0",
+  "description": "Control OpenRGB Devices by Music",
+  "main": "BeatToLed.js",
+  "scripts": {
+    "start": "node BeatToLed.js"
+  },
+  "author": "Philipp_Counter",
+  "license": "ISC",
+  "dependencies": {
+    "naudiodon": "^2.3.5",
+    "openrgb-sdk": "^0.4.3"
+  }
+}
