@@ -4,7 +4,7 @@ Music Visualizer to OpenRGB
 config is within BeatToLed.js
 -------------
 
-npm install (ggf. auch für den music-beat-detector)
+npm install (if needed also for the music-beat-detector)
 
 npm start
 
