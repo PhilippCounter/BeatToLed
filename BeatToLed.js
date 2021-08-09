@@ -32,7 +32,9 @@ const ms = 100;
 const fs = require('fs');
 const portAudio = require('naudiodon');
 const {MusicBeatDetector, MusicBeatScheduler, MusicGraph} = require('./music-beat-detector');
-const { Client } = require("openrgb-sdk")
+const { Client } = require("openrgb-sdk");
+const chalkAnimation = require('chalk-animation');
+
 const musicGraph = new MusicGraph();
 
 
@@ -97,12 +99,14 @@ function svg () {
 
 
 
+
+
 // the main function of the tool
 // connect to OpenRGB, poll led_output, send update
 async function start () {
     const client = new Client("Example", port, ip)
     await client.connect()
-    console.log("connected to: " + ip + ":" + port + ", refresh rate: " + ms + "ms");
+    //console.log("connected to: " + ip + ":" + port + ", refresh rate: " + ms + "ms");
 
     const amount = await client.getControllerCount()
     await setDirectMode(client,amount);
@@ -117,6 +121,9 @@ async function start () {
     loop()
 }
 start()
+
+const led_preview = chalkAnimation.rainbow( ('=').repeat( led_count )  );
+led_preview.start()
 
 
 
@@ -135,7 +142,8 @@ function taktAnimation ( LEDs ) {
 
     async function loop (offset = 0) {
 
-        led_output = fillArray(color1, color2, LEDs, level);
+        led_preview.replace( ('=').repeat( level )  );
+        led_output  = fillArray(color1, color2, LEDs, level);
         level--;
 
         setTimeout(_ => {

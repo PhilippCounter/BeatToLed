@@ -9,6 +9,7 @@
   "author": "Philipp_Counter",
   "license": "ISC",
   "dependencies": {
+    "chalk-animation": "^1.6.0",
     "naudiodon": "^2.3.5",
     "openrgb-sdk": "^0.4.3"
   }
