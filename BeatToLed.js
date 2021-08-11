@@ -20,13 +20,13 @@ const color2 = {
 // and strip 3 the _ on the side of my PC, all connected as one 54 led argb cable
 var led_setup = [
     // strip1 = 0-9
-    { from: 0,  to: 9, },
+    { from: 0,  to: 9, is_reversed: false },
 
     // strip2 = 10-19
-    { from: 10, to: 19 },
+    { from: 10, to: 19, is_reversed: true },
 
     // strip3 = 20-53
-    { from: 20, to: 53 },
+    { from: 20, to: 53, is_reversed: false },
 ];
 
 
@@ -78,9 +78,9 @@ function startMusicDetection () {
       minThreashold: 200,
     },(height) => { 
         // on peak do
-        taktAnimation(0, false);
-        taktAnimation(1, true);
-        taktAnimation(2, false);
+        for (var i = 0; i < led_setup.length; i++) {
+            taktAnimation(i, led_setup[i].is_reversed);
+        }
     })
 
     ai.on('data', buf => {
