@@ -21,6 +21,12 @@ Then install VB Cable from: https://vb-audio.com/Cable/
 
 ---
 
+Edit the BeatToLed.js
+
+- edit the first few lines to your personal preferenceses ( led,ip setup etc. )
+
+---
+
 Now setup the node app itself
 
 - go to the path where you put it ( in this folder should, among other things, be the BeatToLed.js and the package.json )
