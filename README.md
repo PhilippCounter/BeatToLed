@@ -7,6 +7,12 @@ First setup NodeJS ( I used version 16.6.1 )
 - The Win x64 setup: https://nodejs.org/dist/v16.6.1/node-v16.6.1-x64.msi
 
 ---
+Install OpenRGB
+
+- fairly easy, it also has a GUI https://openrgb.org/
+- if your LED Controller is listed within the tool, it can be controlled
+
+---
 
 Then install VB Cable from: https://vb-audio.com/Cable/
 
