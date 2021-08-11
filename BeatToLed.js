@@ -166,11 +166,7 @@ function taktAnimation ( strip, is_reversed ) {
         var new_output = fillArray(color1, color2, stripSize( led_setup[strip] ), level[strip])
 
         for (var i = led_setup[strip].from; i <= led_setup[strip].to; i++) {
-            if ( is_reversed ) {
-                led_output[i] = new_output.pop();
-            } else {
-                led_output[i] = new_output.shift();
-            }
+            led_output[i] = is_reversed ? new_output.pop() : new_output.shift();
         }
 
         led_preview.replace( led_output.map( (e) => (e.red + e.green + e.blue) > 0 ? '=' : ' '  ).join('') );
