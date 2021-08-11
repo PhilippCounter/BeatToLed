@@ -15,8 +15,20 @@ const color2 = {
     blue  : 0,
 };
 
-// amount of leds used
-const led_count = 54;
+// split one led strip into multiple areas to make i.e. a U shaped strip work in parallel
+// my setup kinda looks like this "_U" with the U being strip 1+2 on the front
+// and strip 3 the _ on the side of my PC, all connected as one 54 led argb cable
+var led_setup = [
+    // strip1 = 0-9
+    { from: 0,  to: 9, },
+
+    // strip2 = 10-19
+    { from: 10, to: 19 },
+
+    // strip3 = 20-53
+    { from: 20, to: 53 },
+];
+
 
 // the device id in open rgb
 const open_rgb_id = 1;
@@ -24,7 +36,7 @@ const open_rgb_id = 1;
 // OpenRGB config, ms polling rate
 const ip = "192.168.2.208";
 const port = 6742;
-const ms = 100;
+const ms = 4;
 
 
 
@@ -37,11 +49,12 @@ const chalkAnimation = require('chalk-animation');
 
 const musicGraph = new MusicGraph();
 
-
+// used for prefill and console animation
+var full_strip_size = stripSize(led_setup[ led_setup.length-1 ])+1;
 
 // this array is globally used to set animations
 // it is beeing pulled for output
-var led_output = [];
+var led_output = fillArray(color1, color2, full_strip_size, 10);
 
 
 // capturing music stream, detecting beats, starting the animation 
@@ -61,11 +74,13 @@ function startMusicDetection () {
     // settings for the beat detector
     const musicBeatDetector = new MusicBeatDetector({
       plotter: musicGraph.getPlotter(),
-      sensitivity: 0.5,
-      minThreashold: 100,
+      sensitivity: 0.65,
+      minThreashold: 200,
     },(height) => { 
         // on peak do
-        taktAnimation(led_count);
+        taktAnimation(0, false);
+        taktAnimation(1, true);
+        taktAnimation(2, false);
     })
 
     ai.on('data', buf => {
@@ -95,7 +110,7 @@ function svg () {
     }, 1000)    
 }
 // disabled by default
-// svg();
+//svg();
 
 
 
@@ -111,7 +126,8 @@ async function start () {
     const amount = await client.getControllerCount()
     await setDirectMode(client,amount);
 
-    async function loop (offset = 0) {    
+    async function loop (offset = 0) {  
+
         // send update to OpenRGB  
         await client.updateLeds(open_rgb_id, led_output);
 
@@ -122,7 +138,7 @@ async function start () {
 }
 start()
 
-const led_preview = chalkAnimation.rainbow( ('=').repeat( led_count )  );
+const led_preview = chalkAnimation.rainbow( ('=').repeat( full_strip_size )  );
 led_preview.start()
 
 
@@ -130,28 +146,44 @@ led_preview.start()
 // HELPER FUNCTIONS
 
 
+function stripSize ( strip ) {
+    return strip.to - strip.from + 1;
+}
+
 // the animation function of one beat
 // played around a bit and this looked the best to me
-var animation_counter = 0;
-var level   = 0;
-function taktAnimation ( LEDs ) {
-    var id = ++animation_counter;
-    if ( id > 40 ) animation_counter = 0; 
+var animation_counter = led_setup.map( () => 0 );
+var level             = led_setup.map( () => 0 );
+function taktAnimation ( strip, is_reversed ) {
 
-    level = LEDs;
+    var id = ++animation_counter[strip];
+    if ( id > 40 ) animation_counter[strip] = 0; 
+
+    level[strip] = stripSize( led_setup[strip] );
 
     async function loop (offset = 0) {
 
-        led_preview.replace( ('=').repeat( level )  );
-        led_output  = fillArray(color1, color2, LEDs, level);
-        level--;
+        var new_output = fillArray(color1, color2, stripSize( led_setup[strip] ), level[strip])
+
+        for (var i = led_setup[strip].from; i <= led_setup[strip].to; i++) {
+            if ( is_reversed ) {
+                led_output[i] = new_output.pop();
+            } else {
+                led_output[i] = new_output.shift();
+            }
+        }
+
+        led_preview.replace( led_output.map( (e) => (e.red + e.green + e.blue) > 0 ? '=' : ' '  ).join('') );
+
+        level[strip]--;
 
         setTimeout(_ => {
-            if ( animation_counter != id ) return;
-            if ( level >= 0 ) loop(offset + 1);
-        }, 4)
+            if ( animation_counter[strip] != id ) return;
+            if ( level[strip] >= 0 ) loop(offset + 1);
+        }, 20)
     }
     loop()
+
 }
 
 
