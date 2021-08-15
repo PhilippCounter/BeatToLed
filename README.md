@@ -13,10 +13,17 @@ Install OpenRGB
 - if your LED Controller is listed within the tool, it can be controlled
 
 ---
+Audio to mic - variant 1: Check if your driver supports stereomix
 
-Then install VB Cable from: https://vb-audio.com/Cable/
+- install your latest audio driver (for me it was the Realtek Audio Driver)
+- follow this tutorial to enable stereomix: https://www.howtogeek.com/howto/39532/how-to-enable-stereo-mix-in-windows-7-to-record-audio/
+- after enabeling set the device to you default option
 
-( you can use other software but as far as I now, you need to have your general audio passed through a microphone channel to use naudiodon because it can't setup a loopback for recording, will probably replace this as soon as I get something else to work, "fmedia" was so far the most promising alternative )
+---
+
+Audio to mic - variant 2: if you still have no option to record your audio use VB Cable from: https://vb-audio.com/Cable/
+
+( you can use other software but as far as I now, you need to have your general audio passed through a microphone channel to use naudiodon because it can't setup a loopback for recording )
 - don't panic if you have no audio, follow this tutorial: https://kast.zendesk.com/hc/en-us/articles/360032189351-Setting-Up-a-Virtual-Cable-on-Windows-by-Colelision
 
 ---
